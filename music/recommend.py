@@ -75,6 +75,15 @@ def build_predictions(df: pd.DataFrame, user: User):
 
     return result_set
 
+def build_random_recommendations(user: User, num_recommendations: int = 20):
+    user_profile = UserProfile.objects.get(user=user)
+    user_like = user_profile.likes.all()
+    user_dislike = user_profile.dislikes.all()
+
+    all_music = Music.objects.exclude(pk__in=[music.pk for music in user_like]).exclude(pk__in=[music.pk for music in user_dislike])
+    random_recommendations = all_music.order_by('?')[:num_recommendations]
+
+    return list(random_recommendations)
 
 def build_genre_predictions(user: User):
     predictions = []
@@ -127,8 +136,9 @@ def build_recommend(request: HttpRequest, user: User):
     predictions.extend(build_predictions(build_df(), user))
     predictions.extend(build_genre_predictions(user))
     predictions.extend(build_language_predictions(user))
-
-    return predictions
+    if len(predictions) == 0:
+        predictions.extend(build_random_recommendations(user))
+    return predictions[:20]
 
 
 # if __name__ == '__main__':

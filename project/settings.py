@@ -120,8 +120,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'media')
-MEDIA_URL = '/media/'
+
 
 # messages
 

@@ -4,8 +4,8 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django.setup()
 
-from music.models import UserProfile, Music
-from music.subscribe import genre_labels, language_labels
+from music.models import Music
+from Data.subscribe import genre_labels, language_labels
 
 if __name__ == '__main__':
     music_set = Music.objects.all()

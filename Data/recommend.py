@@ -61,7 +61,7 @@ def build_predictions(df: pd.DataFrame, user: User):
 
     for item in predictions:
         prediction: Prediction = item
-        if prediction.est > 0.60:
+        if prediction.est > 0.70:
             music = Music.objects.get(pk=prediction.iid)
             # 去重，不推荐用户已经喜欢的 或不喜欢的音乐
             if music in user_like:

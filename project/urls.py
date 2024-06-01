@@ -25,7 +25,7 @@ urlpatterns = [
     path('', views.home),
     path('recommend', views.recommend),
     path('sign_in', views.sign_in),
-    path('sign_up', views.sign_up),
+    path('register', views.register),
     path('logout', views.user_logout),
     path('like/<int:pk>', views.like),
     path('dislike/<int:pk>', views.dislike),

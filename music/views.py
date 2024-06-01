@@ -6,20 +6,20 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from .models import Music, UserProfile
-from .recommend import build_df, build_recommend
-from .subscribe import build_genre_ids, build_languages
+from Data.recommend import build_recommend
+from Data.subscribe import build_genre_ids, build_languages
 from .decorators import cold_boot
 
 current_play = None
 
 current_recommend = []
 
-
+@login_required(login_url='/sign_in')
 def home(request):
     return all(request)
 
 
-def sign_up(request):
+def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -30,7 +30,7 @@ def sign_up(request):
             UserProfile.objects.create(user=user_obj)
             messages.add_message(request, messages.SUCCESS, '注册成功！')
             return HttpResponseRedirect('/')
-    return render(request, 'sign_up.html')
+    return render(request, 'register.html')
 
 
 def sign_in(request):
@@ -52,7 +52,6 @@ def user_logout(request):
     logout(request)
     messages.info(request, '退出登录')
     return HttpResponseRedirect('/')
-
 
 @cold_boot
 def all(request):
@@ -119,7 +118,7 @@ def dislike(request, pk: int):
         redirect_url += f'&action={request.GET["action"]}'
     return HttpResponseRedirect(redirect_url)
 
-
+@login_required(login_url='/sign_in')
 def play(request, pk: int = 0):
     global current_play
     if pk > 0:
@@ -146,25 +145,33 @@ def user_center(request):
         return HttpResponseRedirect('/')
 
     if request.method == 'POST':
-        genres = request.POST.getlist('genres', '')
-        languages = request.POST.getlist('languages', '')
+        genres = request.POST.getlist('genres[]', '')
+        languages = request.POST.getlist('languages[]', '')
         profile_obj.first_run = False
+
+        # 标志位，检测是否进行了修改
+        genre_modified = False
+        language_modified = False
 
         if len(genres) > 0:
             profile_obj.genre_subscribe = ','.join(genres)
-            profile_obj.save()
-            messages.success(request, '修改流派订阅成功！')
+            genre_modified = True
         elif not profile_obj.first_run:
             profile_obj.genre_subscribe = ''
-            profile_obj.save()
-            messages.success(request, '修改流派订阅成功！')
+            genre_modified = True
 
         if len(languages) > 0:
             profile_obj.language_subscribe = ','.join(languages)
-            profile_obj.save()
-            messages.success(request, '修改语言订阅成功！')
+            language_modified = True
         elif not profile_obj.first_run:
             profile_obj.language_subscribe = ''
+            language_modified = True
+
+        # 保存并返回消息
+        if genre_modified:
+            profile_obj.save()
+            messages.success(request, '修改流派订阅成功！')
+        if language_modified:
             profile_obj.save()
             messages.success(request, '修改语言订阅成功！')
 
@@ -184,7 +191,7 @@ def user_center(request):
 
     return render(request, 'user.html', context=context)
 
-
+@login_required(login_url='/sign_in')
 def search(request):
     if 'keyword' not in request.GET:
         messages.error(request, '请输入搜索关键词')

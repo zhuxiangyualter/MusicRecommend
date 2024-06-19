@@ -73,6 +73,24 @@ def all(request):
     return render(request, 'list.html', context)
 
 
+# @login_required(login_url='/sign_in')
+# @cold_boot
+# def recommend(request):
+#     page_number = request.GET.get('page', 1)
+#     recommend_set = build_recommend(request, request.user)
+#     paginator = Paginator(recommend_set, 20)
+#     musics = paginator.page(page_number)
+#     context = {
+#         'musics': musics,
+#         'user_likes': [],
+#         'user_dislikes': []
+#     }
+#     user_profile = UserProfile.objects.filter(user=request.user)
+#     if user_profile.exists():
+#         user_profile = user_profile.first()
+#         context['user_likes'] = user_profile.likes.all()
+#         context['user_dislikes'] = user_profile.dislikes.all()
+#     return render(request, 'recommend.html', context)
 @login_required(login_url='/sign_in')
 @cold_boot
 def recommend(request):
@@ -90,7 +108,7 @@ def recommend(request):
         user_profile = user_profile.first()
         context['user_likes'] = user_profile.likes.all()
         context['user_dislikes'] = user_profile.dislikes.all()
-    return render(request, 'list.html', context)
+    return render(request, 'recommend.html', context)
 
 
 @login_required(login_url='/sign_in')

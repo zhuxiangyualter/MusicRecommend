@@ -29,13 +29,14 @@ def build_predictions(df: pd.DataFrame, user: User):
         profile_obj: UserProfile = profile.first()
     else:
         return []
-
+    #预处理
     reader = Reader(rating_scale=(0, 1))
     data = Dataset.load_from_df(df[['userID', 'itemID', 'rating']], reader)
     trainset = data.build_full_trainset()
+    #生成模型
     algo = SVD()
     algo.fit(trainset)
-
+    #生成推荐
     subsets = df[['itemID']].drop_duplicates()
     testset = []
     for row in subsets.iterrows():

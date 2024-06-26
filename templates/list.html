@@ -31,7 +31,9 @@
                 <div class="row">
                     <a href="/play/{{ music.pk }}" class=" btn btn-outline-info" style="margin:0 20px">播放</a>
                     <a href="/like/{{ music.pk }}?from={{ request.get_full_path }}" class=" btn btn-outline-danger" style="margin-right: 20px">喜欢</a>
-                    <a href="/dislike/{{ music.pk }}?from={{ request.get_full_path }}" class=" btn btn-outline-warning">不喜欢</a>
+                    <a href="/dislike/{{ music.pk }}?from={{ request.get_full_path }}" class=" btn btn-outline-warning"style="margin-right: 20px">不喜欢</a>
+                    <a href="/mv/{{ music.pk }}" class="btn btn-outline-secondary"style="margin-right: 20px">播放MV</a>
+
                 </div>
             </div>
         {% endfor %}

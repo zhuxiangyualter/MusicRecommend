@@ -239,3 +239,7 @@ def search(request):
             context['user_dislikes'] = user_profile.dislikes.all()
 
     return render(request, 'list.html', context)
+@login_required(login_url='/sign_in')
+def mv_view(request, pk):
+    music = get_object_or_404(Music, pk=pk)
+    return render(request, 'video.html', {'music': music})

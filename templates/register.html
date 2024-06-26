@@ -13,23 +13,47 @@
 
     <!-- Custom styles for this template -->
     <link href="/static/css/signin.css" rel="stylesheet">
+
+    <style>
+        .invalid-feedback {
+            display: none;
+        }
+        .is-invalid + .invalid-feedback {
+            display: block;
+        }
+    </style>
 </head>
 
 <body class="text-center">
-<form method="post" class="form-signin">
+<form method="post" class="form-signin" id="registerForm">
     {% csrf_token %}
 
-    <img class="mb-4" src="static/player/images/register.jpg" alt="" width="120" height="120">
+    <img class="mb-4" src="static/player/images/register.jpg" alt="" width="300" height="300">
     <h1 class="h3 mb-3 font-weight-normal">请输入用户名和密码进行注册</h1>
     <label for="inputUserName" class="sr-only">用户名</label>
     <input type="text" id="inputUserName" class="form-control" placeholder="用户名" name="username" required autofocus>
     <label for="inputPassword" class="sr-only">密码</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="密码" name="password" required>
+    <input type="password" id="inputPassword" class="form-control" placeholder="密码（至少8位）" name="password" required pattern=".{8,}">
+    <div class="invalid-feedback">
+        密码至少需要8个字符。
+    </div>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
 
     已有账号，<a href="sign_in">登录</a>
     <p class="mt-5 mb-3 text-muted">&copy; 2024</p>
 </form>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+        var passwordInput = document.getElementById('inputPassword');
+        if (!passwordInput.checkValidity()) {
+            passwordInput.classList.add('is-invalid');
+            event.preventDefault();
+        } else {
+            passwordInput.classList.remove('is-invalid');
+        }
+    });
+</script>
 </body>
 </html>

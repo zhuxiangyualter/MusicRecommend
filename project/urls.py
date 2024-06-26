@@ -33,5 +33,6 @@ urlpatterns = [
     path('play/<int:pk>', views.play),
     path('user', views.user_center),
     path('search',views.search),
+    path('mv/<int:pk>/', views.mv_view, name='mv_view'),
 ]
 
